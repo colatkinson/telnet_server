@@ -1,0 +1,4 @@
+[package]
+name = "telnet_server"
+version = "0.1.0"
+authors = ["Colin Atkinson <colin.william.atkinson@gmail.com>"]

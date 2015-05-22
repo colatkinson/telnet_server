@@ -1,0 +1,28 @@
+use std::io::{Write, Read};
+use std::net::{TcpListener};
+use std::thread;
+
+fn main() {
+    let listener = TcpListener::bind("127.0.0.1:9123").unwrap();
+    println!("listening started, ready to accept");
+    for stream in listener.incoming() {
+        thread::spawn(|| {
+            let mut stream = stream.unwrap();
+            stream.write(b"Hello World\r\n").unwrap();
+            loop {
+                let mut buf = [0u8; 4096];
+                let got = stream.read(&mut buf);
+                let s = match std::str::from_utf8(&buf) {
+                    Ok(v) => v,
+                    Err(_) => panic!("Invalid UTF-8 sequence")
+                };
+                //println!("{:?}", stream.peer_addr().unwrap());
+                println!("{:?} - {}", stream.peer_addr().unwrap(), s);
+                stream.write_all(s.as_bytes());
+                if got.unwrap() == 0 {
+                    break;
+                }
+            }
+        });
+    }
+}

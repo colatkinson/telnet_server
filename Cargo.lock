@@ -1,0 +1,4 @@
+[root]
+name = "telnet_server"
+version = "0.1.0"
+
