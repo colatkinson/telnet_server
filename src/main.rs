@@ -1,14 +1,12 @@
-use cmds::Command;
+extern crate telnet_server;
+
+use telnet_server::cmds::Command;
+use telnet_server::util::*;
+use telnet_server::login;
 use std::io::Write;
 
-mod cmds;
-
-fn clear_screen() {
-    print!("\x1b[2J\x1b[;H");
-    std::io::stdout().flush().unwrap();
-}
-
 fn menu_screen() -> bool {
+    set_def_colors();
     clear_screen();
     let command_vec = vec![Command::Message];
 
@@ -18,7 +16,7 @@ fn menu_screen() -> bool {
         println!("{}) {}", num, opt.get_name());
     }
     println!("{}) {}", num + 1, "Quit");
-    print!("\x1b[9999;1H");
+    last_line();
     print!("Choose a command: ");
     std::io::stdout().flush().unwrap();
 
@@ -43,6 +41,10 @@ fn menu_screen() -> bool {
 }
 
 fn main() {
+    set_def_colors();
+    clear_screen();
+    let (user, pass) = login::login_screen();
+    let cxt = Context {user: user};
     loop {
         if !menu_screen() {
             break;

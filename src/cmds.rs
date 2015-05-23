@@ -5,7 +5,6 @@ pub enum Command {
 }
 
 fn message_run() {
-    std::thread::sleep_ms(1000);
     println!("(Most) computers use binary!");
     let mut asdf = String::new();
     std::io::stdin().read_line(&mut asdf).unwrap();
