@@ -1,3 +1,6 @@
+//! The main binary.
+
+#![allow(dead_code)]
 extern crate telnet_server;
 
 use telnet_server::cmds::Command;
@@ -5,10 +8,12 @@ use telnet_server::util::*;
 use telnet_server::login;
 use std::io::Write;
 
-fn menu_screen() -> bool {
+fn menu_screen(cxt: &Context) -> bool {
     set_def_colors();
     clear_screen();
     let command_vec = vec![Command::Message];
+
+    println!("{:?}", cxt);
 
     let mut num = 0;
     for opt in &command_vec {
@@ -35,7 +40,7 @@ fn menu_screen() -> bool {
         false
     } else {
         println!("Zippity zoo!");
-        command_vec[choice - 1].run();
+        let _ = command_vec[choice - 1].run(cxt);
         true
     }
 }
@@ -43,10 +48,10 @@ fn menu_screen() -> bool {
 fn main() {
     set_def_colors();
     clear_screen();
-    let (user, pass) = login::login_screen();
+    let (user, _) = login::login_screen();
     let cxt = Context {user: user};
     loop {
-        if !menu_screen() {
+        if !menu_screen(&cxt) {
             break;
         }
     }
