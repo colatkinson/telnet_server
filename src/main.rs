@@ -7,6 +7,7 @@ use telnet_server::cmds::Command;
 use telnet_server::util::*;
 use telnet_server::login;
 use std::io::Write;
+use telnet_server::user;
 
 fn menu_screen(cxt: &Context) -> bool {
     set_def_colors();
@@ -46,9 +47,14 @@ fn menu_screen(cxt: &Context) -> bool {
 }
 
 fn main() {
+    /*user::create_test_users();
+    std::thread::sleep_ms(1000);
+    let s = user::load_users().unwrap();
+    println!("{}", s["colin"]);*/
     set_def_colors();
     clear_screen();
-    let (user, _) = login::login_screen();
+    let (user, pwd) = login::login_screen();
+    let _ = user::add_user(&user, &pwd);
     let cxt = Context {user: user};
     loop {
         if !menu_screen(&cxt) {
