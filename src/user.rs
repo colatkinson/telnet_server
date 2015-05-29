@@ -62,7 +62,7 @@ pub fn add_user(user: &str, pwd: &str) -> Result<()> {
 /// Check if a supplied password is correct.
 pub fn check_user(user: &str, pwd: &str) -> bool {
     let users = load_users().unwrap();
-    users[user] == hash_pass(pwd)
+    users.contains_key(user) && users[user] == hash_pass(pwd)
 }
 
 /// Hashes a password

@@ -53,8 +53,35 @@ fn main() {
     println!("{}", s["colin"]);*/
     set_def_colors();
     clear_screen();
-    let (user, pwd) = login::login_screen();
-    let _ = user::add_user(&user, &pwd);
+    let act = login::action_select();
+    let mut login_prompt = true;
+    if act == login::LoginActions::Quit {
+        return;
+    }
+    let (mut user, mut pwd) = ("".to_string(), "".to_string());
+    loop {
+        //clear_screen();
+        let x = login::login_screen();
+        user = x.0;
+        pwd = x.1;
+        match act {
+            login::LoginActions::New => {
+                let _ = user::add_user(&user, &pwd);
+                login_prompt = false;
+            },
+            login::LoginActions::Quit =>  {
+                login_prompt = false;
+            },
+            login::LoginActions::Login => {
+                login_prompt = !user::check_user(&user, &pwd);
+            }
+        }
+
+        if !login_prompt {
+            break;
+        }
+    }
+    //let _ = user::add_user(&user, &pwd);
     let cxt = Context {user: user};
     loop {
         if !menu_screen(&cxt) {
