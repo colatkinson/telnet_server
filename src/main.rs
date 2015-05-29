@@ -47,18 +47,14 @@ fn menu_screen(cxt: &Context) -> bool {
 }
 
 fn main() {
-    /*user::create_test_users();
-    std::thread::sleep_ms(1000);
-    let s = user::load_users().unwrap();
-    println!("{}", s["colin"]);*/
     set_def_colors();
     clear_screen();
     let act = login::action_select();
-    let mut login_prompt = true;
+    let mut login_prompt: bool;
     if act == login::LoginActions::Quit {
         return;
     }
-    let (mut user, mut pwd) = ("".to_string(), "".to_string());
+    let (mut user, mut pwd): (String, String);
     loop {
         //clear_screen();
         let x = login::login_screen();
@@ -81,7 +77,7 @@ fn main() {
             break;
         }
     }
-    //let _ = user::add_user(&user, &pwd);
+
     let cxt = Context {user: user};
     loop {
         if !menu_screen(&cxt) {

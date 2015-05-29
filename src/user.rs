@@ -66,6 +66,15 @@ pub fn check_user(user: &str, pwd: &str) -> bool {
 }
 
 /// Hashes a password
+///
+/// # Examples
+///
+/// ```
+/// use telnet_server::user::hash_pass;
+/// 
+/// assert_eq!(hash_pass("test"), "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08".to_string());
+/// ```
+
 pub fn hash_pass(pass: &str) -> String {
     let mut sha = Sha256::new();
     sha.input_str(pass);

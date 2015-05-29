@@ -3,6 +3,7 @@
 use std;
 use util::*;
 
+/// A list of potential actions on the action selection screen.
 #[derive(PartialEq)]
 pub enum LoginActions {
     Login,
@@ -53,6 +54,7 @@ fn get_username() -> String {
     user.trim().to_string()
 }
 
+/// Have the user select whether they wish to log in, create a new account, or quit.
 pub fn action_select() -> LoginActions {
     clear_screen();
     print_banner();
@@ -76,7 +78,7 @@ pub fn action_select() -> LoginActions {
         1 => LoginActions::Login,
         2 => LoginActions::New,
         3 => LoginActions::Quit,
-        _ => action_select()
+        _ => LoginActions::Quit
     };
     res
 }
