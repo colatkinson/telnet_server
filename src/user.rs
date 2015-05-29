@@ -6,6 +6,8 @@ use std::fs::File;
 use std::collections::HashMap;
 use rustc_serialize::json;
 use std::io::{Result, Error, ErrorKind};
+use crypto::digest::Digest;
+use crypto::sha2::Sha256;
 
 /// Attempts to load a HashMap of users from `users.json`.
 ///
@@ -40,7 +42,7 @@ pub fn save_users(users: HashMap<String, String>) -> Result<()> {
 /// Creates a test user and saves it.
 fn create_test_users() -> Result<()> {
     let mut users = HashMap::new();
-    users.insert("colin", "12345");
+    users.insert("colin", hash_pass("12345"));
     let s = json::encode(&users).unwrap();
     println!("{}", s);
     let decoded: HashMap<String, String> = json::decode(&s).unwrap();
@@ -53,12 +55,19 @@ fn create_test_users() -> Result<()> {
 /// Add a user with the given username and password.
 pub fn add_user(user: &str, pwd: &str) -> Result<()> {
     let mut cur = try!(load_users());
-    cur.insert(user.to_string(), pwd.to_string());
+    cur.insert(user.to_string(), hash_pass(pwd));
     save_users(cur)
 }
 
 /// Check if a supplied password is correct.
 pub fn check_user(user: &str, pwd: &str) -> bool {
     let users = load_users().unwrap();
-    users[user] == pwd.to_string()
+    users[user] == hash_pass(pwd)
+}
+
+/// Hashes a password
+pub fn hash_pass(pass: &str) -> String {
+    let mut sha = Sha256::new();
+    sha.input_str(pass);
+    sha.result_str()
 }
